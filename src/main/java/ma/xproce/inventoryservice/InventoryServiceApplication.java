@@ -2,7 +2,7 @@ package ma.xproce.inventoryservice;
 
 import ma.xproce.inventoryservice.dao.entites.Creator;
 import ma.xproce.inventoryservice.dao.entites.Video;
-import ma.xproce.inventoryservice.dao.repositories.CreatorDAO;
+//import ma.xproce.inventoryservice.dao.repositories.CreatorDAO;
 import ma.xproce.inventoryservice.dao.repositories.VideoDAO;
 import ma.xproce.inventoryservice.service.CreatorManager;
 import ma.xproce.inventoryservice.service.VideoManager;
@@ -71,19 +71,28 @@ public class InventoryServiceApplication{
             creatorManager.createCreator(creator);
             Video video = new Video();
             video.setName("Video 1");
-            video.setDatePublication(new Date(2024,01,13));
+            video.setDatePublication(new Date(2024  - 1900,01,13));
             video.setDescription("Video explicative");
             video.setUrl("https://classroom.google.com/c/NjY0MzU4NzA0Mzcz/a/NjU2MjAzNDI5MTg5/details");
 
+            Video video2 = new Video();
+            video2.setName("Video 2");
+            video2.setDatePublication(new Date(2024 - 1900,01,13));
+            video2.setDescription("Video explicative de la video 2");
+            video2.setUrl("https://github.com/badrhr/Spring-boot-the-complete-App/blob/main/src/main/java/org/xproce/produitexample/web/ProduitController.java");
+
             videoManager.createVideo(video);
+            videoManager.createVideo(video2);
 
             List<Video> videos = new ArrayList<>();
             videos.add(video);
+            videos.add(video2);
 
             video.setCreator(creator);
             creator.setVideo(videos);
             videoManager.createVideo(video);
             creatorManager.createCreator(creator);
+
 
 
             List<Video> videosList = videoManager.getAllVideos();
@@ -95,6 +104,7 @@ public class InventoryServiceApplication{
             creatorsList.forEach(creatorFromList ->{
                 System.out.println(creatorFromList.toString());
             });
+
 
 
         };

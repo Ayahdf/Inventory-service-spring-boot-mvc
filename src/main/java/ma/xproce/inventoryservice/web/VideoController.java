@@ -4,15 +4,17 @@ package ma.xproce.inventoryservice.web;
 import ma.xproce.inventoryservice.dao.entites.Video;
 import ma.xproce.inventoryservice.service.VideoManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Controller
 public class VideoController {
@@ -59,6 +61,9 @@ public class VideoController {
     public String editVideo(Model model, @RequestParam(name="Id", required=false) Long Id)
     {
         if (Id == null) {
+            List<Video> videos = videoManager.getAllVideos();
+            model.addAttribute("videos", videos);
+            System.out.println("hello");
             return "listVideos";
         }
         Optional<Video> video = videoManager.getVideoById(Id);
@@ -66,10 +71,32 @@ public class VideoController {
             model.addAttribute("videoToBeEdited", video.get());
             return "editVideo";
         } else {
-            return "editVideo";
+            System.out.println("Nooooooot hello");
+            return "error";
         }
 
 
+    }
+
+    @PostMapping("/editVideo/{id}")
+    public String editVideo(@PathVariable("id") Long id, @ModelAttribute("videoToBeEdited") Video videoToBeEdited, BindingResult result, Model model) {
+
+
+        videoManager.updateVideo(videoToBeEdited);
+        List<Video> videos = videoManager.getAllVideos();
+        model.addAttribute("videos", videos);
+        return "redirect:/listVideos";
+    }
+    @GetMapping("/deleteVideo/{id}")
+    public String deleteVideo(@PathVariable("id") Long id, Model model) {
+        boolean test = videoManager.deleteVideo(id);
+        if (test) {
+            System.out.println("c valide");
+            return "redirect:/listVideos";
+        } else {
+            System.out.println("rien ne se passe");
+            return "error";
+        }
     }
 
 }
